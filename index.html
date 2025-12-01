@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>K-TRISS Survival Probability Calculator</title>
+<style>
+  .k-triss-calculator {
+    font-family: Arial, sans-serif;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    margin: 20px auto;
+  }
+  .k-triss-calculator h3 {
+    text-align: center;
+    color: #333;
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .button:hover {
+    background-color: #45a049;
+  }
+  .result {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="k-triss-calculator">
+  <h3>K-TRISS Survival Probability Calculator</h3>
+  <p>Select either the K-TRISS-1 or K-TRISS-2 model to calculate the survival probability.</p>
+
+  <div class="form-group" style="align-items:center;">
+    <label>Model Selection:</label>
+    <label>
+      <input type="radio" name="model" value="ktriss1" checked>
+      K-TRISS-1 (Age categorized at 55 years)
+    </label>
+    <label>
+      <input type="radio" name="model" value="ktriss2">
+      K-TRISS-2 (Age treated as a continuous variable)
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label for="rts">Revised Trauma Score (RTS):</label>
+    <input type="number" id="rts" step="0.01" min="0" max="7.8408" value="7.0" required>
+  </div>
+  <div class="form-group">
+    <label for="iss">Injury Severity Score (ISS):</label>
+    <input type="number" id="iss" min="0" max="75" value="25" required>
+  </div>
+  <div class="form-group">
+    <label for="age">Age:</label>
+    <input type="number" id="age" min="0" max="120" value="45" required>
+  </div>
+
+  <button class="button" onclick="calculateSurvival()">Calculate</button>
+
+  <div id="result" class="result" style="display:none;">
+    <strong>Survival Probability:</strong> <span id="survival-probability"></span>
+  </div>
+</div>
+
+<script>
+function calculateSurvival() {
+  const rts = parseFloat(document.getElementById('rts').value);
+  const iss = parseFloat(document.getElementById('iss').value);
+  const age = parseFloat(document.getElementById('age').value);
+  const model = document.querySelector('input[name="model"]:checked').value;
+
+  // Age index for K-TRISS-1
+  const ageIndex = (age >= 55) ? 1 : 0;
+
+  let b0, b1, b2, b3, b;
+
+  if (model === "ktriss1") {
+    // Example coefficients for K-TRISS-1 (replace with actual from paper)
+    b0 = -0.7337;
+    b1 = 0.8602;
+    b2 = -0.0742;
+    b3 = -1.3413;
+    b = b0 + (b1 * rts) + (b2 * iss) + (b3 * ageIndex);
+  } else {
+    // Example coefficients for K-TRISS-2 (replace with actual from paper)
+    b0 = 1.0852;
+    b1 = 0.8869;
+    b2 = -0.0791;
+    b3 = -0.0457;
+    b = b0 + (b1 * rts) + (b2 * iss) + (b3 * age);
+  }
+
+  const ps = 1 / (1 + Math.exp(-b));
+
+  const resultDiv = document.getElementById('result');
+  const survivalProbabilitySpan = document.getElementById('survival-probability');
+  
+  if (!isNaN(ps)) {
+    survivalProbabilitySpan.textContent = (ps * 100).toFixed(2) + '%';
+    resultDiv.style.display = 'block';
+  } else {
+    survivalProbabilitySpan.textContent = 'Please enter valid values.';
+    resultDiv.style.display = 'block';
+  }
+}
+</script>
+
+</body>
+</html>
