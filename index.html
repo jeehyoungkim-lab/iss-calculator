@@ -11,6 +11,7 @@
     border-radius: 8px;
     max-width: 800px;
     margin: 20px auto;
+    background-color: #fafafa;
   }
   .k-triss-calculator h3 {
     text-align: center;
@@ -20,16 +21,31 @@
     margin-bottom: 15px;
   }
   .form-group label {
-    display: block;
-    margin-bottom: 5px;
     font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
   }
-  .form-group input {
+  .form-group input[type="number"] {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
+  }
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 5px;
+  }
+  .radio-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: normal;
+  }
+  .radio-option input[type="radio"] {
+    margin: 0;
   }
   .button {
     width: 100%;
@@ -47,10 +63,12 @@
   }
   .result {
     margin-top: 20px;
-    padding: 10px;
-    background-color: #f9f9f9;
+    padding: 15px;
+    background-color: #eef9ee;
     border: 1px solid #ddd;
     border-radius: 4px;
+    font-size: 18px;
+    text-align: center;
   }
 </style>
 </head>
@@ -60,16 +78,18 @@
   <h3>K-TRISS Survival Probability Calculator</h3>
   <p>Select either the K-TRISS-1 or K-TRISS-2 model to calculate the survival probability.</p>
 
-  <div class="form-group" style="align-items:center;">
+  <div class="form-group">
     <label>Model Selection:</label>
-    <label>
-      <input type="radio" name="model" value="ktriss1" checked>
-      K-TRISS-1 (Age categorized at 55 years)
-    </label>
-    <label>
-      <input type="radio" name="model" value="ktriss2">
-      K-TRISS-2 (Age treated as a continuous variable)
-    </label>
+    <div class="radio-group">
+      <label class="radio-option">
+        <input type="radio" name="model" value="ktriss1" checked>
+        K-TRISS-1 (Age categorized at 55 years)
+      </label>
+      <label class="radio-option">
+        <input type="radio" name="model" value="ktriss2">
+        K-TRISS-2 (Age treated as a continuous variable)
+      </label>
+    </div>
   </div>
 
   <div class="form-group">
